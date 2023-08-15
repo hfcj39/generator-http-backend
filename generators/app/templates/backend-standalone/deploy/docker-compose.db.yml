@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+    cnops-pgsql:
+        image: postgres:latest
+        container_name: cnops-pgsql
+        restart: always
+        ports: 
+            - "0.0.0.0:5432:5432"
+        volumes: 
+            - ./data/postgres:/var/lib/postgresql/data
+        environment: 
+            - POSTGRES_DB=cnops
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=hello123
+            - TZ=Asia/Shanghai
+
+    cnops-redis:
+        image: redis:latest
+        container_name: cnops-redis
+        restart: always
+        volumes:
+            - ./data/redis:/data
+            - ./redis.conf:/usr/local/etc/redis/redis.conf
+        ports:
+            - "0.0.0.0:6379:6379"
+        command: redis-server /usr/local/etc/redis/redis.conf
