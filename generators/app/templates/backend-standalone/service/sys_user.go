@@ -79,14 +79,10 @@ func GetUserList(args *request.GetUserListStruct, userId uint) (error, *[]model.
 	_, user := FindByUserID(userId)
 	query := global.DB.Model(&model.User{}).
 		Joins("left join roles on roles.id = users.role_id").
-		Joins("left join authorities on authorities.id = users.authority_id").
 		Where("users.username ilike ? or users.display_name ilike ?", "%"+args.Name+"%", "%"+args.Name+"%").
 		Where("roles.role_value <= ?", user.Role.RoleValue)
 	if args.Role != "" {
 		query.Where("roles.role_name ilike ?", "%"+args.Role+"%")
-	}
-	if args.Authority != "" {
-		query.Where("authorities.authority_name ilike ?", "%"+args.Authority+"%")
 	}
 	if user.Role.RoleValue != 777 {
 		query.Where("users.id = ?", userId)
@@ -107,17 +103,12 @@ func GetUserList(args *request.GetUserListStruct, userId uint) (error, *[]model.
 			"users.updated_at",
 			"users.username",
 			"users.display_name",
-			"users.ldap_uid",
-			"users.ldap_group",
-			"users.ldap_mail",
 			"users.custom_group",
 			"users.remark",
 			"users.header_img",
-			"users.authority_id",
 			"users.role_id",
 		}).
 		Preload("Role").
-		Preload("Authority").
 		Count(&count).
 		Limit(args.Limit).Offset((args.Page - 1) * args.Limit).
 		Order("users.updated_at desc").

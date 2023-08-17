@@ -76,6 +76,7 @@ module.exports = class extends Generator{
         return this.projectGenerator.writing(this, this.projectConfig);
     }
 
+    // todo: install swag, exec swag init, go get
     // async install() {
         
     // }
@@ -85,8 +86,8 @@ module.exports = class extends Generator{
             return;
         }
         // Git init
-        if (this.options.gitInit) {
-            this.spawnCommand('git', ['init', '--quiet', '--initial-branch=main']);
+        if (this.projectConfig.gitInit) {
+            this.spawnCommand('git', ['init', '--quiet']);
         }
 
     }

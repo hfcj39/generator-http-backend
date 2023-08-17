@@ -11,10 +11,10 @@ doc:
 run: doc
 	$(GOCMD) run main.go
 test:
-	OPS_CONFIG=../config.test.yaml $(GOTEST) -v ./...
+	<%= displayName %>=../config.test.yaml $(GOTEST) -v ./...
 
 cover:
-	OPS_CONFIG=../config.test.yaml $(GOTEST) ./... -coverprofile=tmp/cover.out
+	<%= displayName %>=../config.test.yaml $(GOTEST) ./... -coverprofile=tmp/cover.out
 
 html:
 	$(GOCMD) tool cover -html=tmp/cover.out -o tmp/cover.html

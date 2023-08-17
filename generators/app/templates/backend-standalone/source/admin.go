@@ -1,11 +1,10 @@
 package source
 
 import (
-	"<%= displayName %>/global"
-	"<%= displayName %>/model"
-	"<%= displayName %>/utils"
+	"TalentQuest/global"
+	"TalentQuest/model"
+	"TalentQuest/utils"
 
-	"github.com/volatiletech/null"
 	"gorm.io/gorm/clause"
 
 	"gorm.io/gorm"
@@ -20,21 +19,16 @@ type admin struct{}
 var admins = []model.User{
 	{
 		BASE_MODEL:  global.BASE_MODEL{ID: 1},
-		Username:    "huangfuchenjie",
-		Password:    "e10adc3949ba59abbe56e057f20f883e",
-		DisplayName: "hfcj",
-		AuthorityID: null.Uint{
-			Uint: 1, Valid: true,
-		},
+		Username:    "sa",
+		Password:    utils.MD5V("hello123"),
+		DisplayName: "sa",
 		RoleID: 1,
 	},
 	{
+		BASE_MODEL:  global.BASE_MODEL{ID: 2},
 		Username:    "admin",
-		Password:    utils.MD5V("hellocnops12345"),
+		Password:    utils.MD5V("hello123"),
 		DisplayName: "admin",
-		AuthorityID: null.Uint{
-			Uint: 1, Valid: true,
-		},
 		RoleID: 2,
 	},
 }

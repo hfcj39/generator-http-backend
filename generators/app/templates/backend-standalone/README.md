@@ -18,7 +18,7 @@
 
 手动执行单测
 
-`$ OPS_CONFIG=../config.test.yaml go test ./... -v`
+`$ <%= displayName %>=../config.test.yaml go test ./... -v`
 
 You can also generate coverage profile using Cover tool
 

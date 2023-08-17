@@ -1,10 +1,11 @@
 package v1
 
 import (
-	"<%= displayName %>/global"
-	"<%= displayName %>/model"
-	"<%= displayName %>/model/response"
-	"<%= displayName %>/service"
+	"TalentQuest/global"
+	"TalentQuest/model"
+	"TalentQuest/model/response"
+	"TalentQuest/service"
+	"TalentQuest/utils/e"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,9 +35,9 @@ func GetSystemConfig(c *gin.Context) {
 // @Router /version [get]
 func GetSystemVersion(c *gin.Context) {
 	rst := model.ServerConfig{}
-	err := global.DB.First(&rst, 9).Error
+	err := global.DB.First(&rst, 1).Error
 	if err != nil {
-		response.FailWithMessage("系统版本获取失败", c)
+		response.FailWithDetailed(e.ERROR, err.Error(), "系统版本获取失败", c)
 		return
 	}
 	response.OkWithData(rst.ConfigValue, c)

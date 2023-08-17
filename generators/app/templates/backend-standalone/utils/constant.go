@@ -1,6 +1,6 @@
 package utils
 
 const (
-	ConfigEnv  = "OPS_CONFIG"
+	ConfigEnv  = "<%= displayName %>"
 	ConfigFile = "config.yaml"
 )

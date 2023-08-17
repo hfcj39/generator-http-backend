@@ -27,7 +27,7 @@ jwt:
 postgres:
   host: localhost
   port: 5432
-  db-name: cnops
+  db-name: database
   username: postgres
   password: hello123
   max-idle-conns: 10
