@@ -13,6 +13,7 @@ func InitBaseRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
 			c.String(200, "pong")
 		})
 		BaseRouter.POST("/user/login", v1.Login)
+		BaseRouter.POST("/user/register", v1.Register)
 		BaseRouter.GET("/version", v1.GetSystemVersion)
 	}
 	return BaseRouter

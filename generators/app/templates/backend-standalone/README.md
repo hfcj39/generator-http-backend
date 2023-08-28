@@ -18,7 +18,7 @@
 
 手动执行单测
 
-`$ <%= displayName %>=../config.test.yaml go test ./... -v`
+`$ <%= displayName %>_CONFIG=../config.test.yaml go test ./... -v`
 
 You can also generate coverage profile using Cover tool
 

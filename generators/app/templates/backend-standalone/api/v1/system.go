@@ -1,11 +1,11 @@
 package v1
 
 import (
-	"TalentQuest/global"
-	"TalentQuest/model"
-	"TalentQuest/model/response"
-	"TalentQuest/service"
-	"TalentQuest/utils/e"
+	"<%= displayName %>/global"
+	"<%= displayName %>/model"
+	"<%= displayName %>/model/response"
+	"<%= displayName %>/service"
+	"<%= displayName %>/utils/e"
 
 	"github.com/gin-gonic/gin"
 )

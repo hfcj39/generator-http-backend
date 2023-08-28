@@ -28,11 +28,11 @@ RUN CARGO_NET_GIT_FETCH_WITH_CLI=1 && \
         # libressl-dev \
         build-base
 
-RUN pip install -U pip wheel && \
-    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
-    pip install --upgrade cryptography cffi && \
-    pip install --ignore-installed jmespath && \
-    pip install --upgrade pywinrm
+# RUN pip install -U pip wheel && \
+#     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+#     pip install --upgrade cryptography cffi && \
+#     pip install --ignore-installed jmespath && \
+#     pip install --upgrade pywinrm
 RUN apk del build-dependencies && \
     rm -rf /var/cache/apk/* && \
     rm -rf /root/.cache/pip && \

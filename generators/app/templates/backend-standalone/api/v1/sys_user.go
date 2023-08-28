@@ -9,9 +9,8 @@ import (
 	"<%= displayName %>/service"
 	"<%= displayName %>/utils"
 	"<%= displayName %>/utils/e"
-	"fmt"
 
-	"github.com/volatiletech/null"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -26,7 +25,7 @@ import (
 func GetUserInfo(c *gin.Context) {
 	claims, _ := c.Get("claims")
 	u := model.User{}
-	err := global.DB.Preload("Role").Preload("Authority").First(&u, claims.(middleware.RoleClaims).UserId).Error
+	err := global.DB.Preload("Role").First(&u, claims.(middleware.RoleClaims).UserId).Error
 	if err != nil {
 		global.LOG.Error(err.Error())
 		response.FailWithMessage("查询用户信息失败", c)
@@ -104,7 +103,6 @@ func UpdateUser(c *gin.Context) {
 		// 修改不了自己的role和authority
 		if opId == user.ID {
 			Args.RoleID = 0
-			Args.AuthorityID = null.Uint{}
 		}
 		if Args.RoleID > 0 {
 			err, role := service.FindRoleById(Args.RoleID)
@@ -124,7 +122,6 @@ func UpdateUser(c *gin.Context) {
 		}
 		err, _ = service.UpdateUser(user, &model.User{
 			RoleID:      Args.RoleID,
-			AuthorityID: Args.AuthorityID,
 			CustomGroup: Args.CustomGroup,
 			Remark:      Args.Remark,
 			HeaderImg:   Args.HeaderImg,
@@ -359,4 +356,37 @@ func SetPassword(c *gin.Context) {
 
 	_ = service.UpdateUserPassword(claims.(middleware.RoleClaims).UserId, utils.MD5V(Args.Password))
 	response.OkWithMessage(msg, c)
+}
+
+func Register(c *gin.Context) {
+	L := &request.Login{}
+	if err := c.ShouldBindJSON(L); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	newUser := &model.User{
+		Username:    L.Username,
+		Password:    utils.MD5V(L.Password),
+		DisplayName: L.Username,
+
+		RoleID: 3, // 444 valid user
+	}
+	err := service.CreateNewUser(newUser)
+	if err != nil {
+		global.LOG.Error(err.Error())
+		response.FailWithMessage("创建新用户失败", c)
+		return
+	}
+	global.LOG.Info("Created new user: " + newUser.Username)
+	err, jwtToken := utils.CreateToken(newUser.Username, newUser.ID, newUser.RoleID)
+	if err != nil {
+		response.FailWithDetailed(e.ErrorAuthToken, err.Error(), e.GetMsg(e.ErrorAuthToken), c)
+		return
+	}
+
+	response.OkDetailed(gin.H{
+		"username": newUser.Username,
+		"token":    jwtToken,
+	}, "创建成功", c)
 }

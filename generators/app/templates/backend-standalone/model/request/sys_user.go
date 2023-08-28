@@ -1,7 +1,5 @@
 package request
 
-import "github.com/volatiletech/null"
-
 // OidcCallback structure
 type OidcCallback struct {
 	Code  string `json:"code" binding:"required"`
@@ -11,7 +9,6 @@ type OidcCallback struct {
 type UpdateUserStruct struct {
 	ID          uint      `json:"id" binding:"required"`
 	RoleID      uint      `json:"role_id"`
-	AuthorityID null.Uint `json:"authority_id"`
 	CustomGroup string    `json:"custom_group"`
 	Remark      string    `json:"remark"`
 	HeaderImg   string    `json:"header_img"`
@@ -26,7 +23,6 @@ type UpdateSelfUserInfoStruct struct {
 
 type GetUserListStruct struct {
 	Name           string `form:"name"`
-	Authority      string `form:"authority"`
 	Role           string `form:"role"`
 	RoleID         uint   `form:"role_id"`
 	ExcludedRoleID uint   `form:"excluded_role_id"`

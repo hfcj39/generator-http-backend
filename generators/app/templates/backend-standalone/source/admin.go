@@ -1,9 +1,9 @@
 package source
 
 import (
-	"TalentQuest/global"
-	"TalentQuest/model"
-	"TalentQuest/utils"
+	"<%= displayName %>/global"
+	"<%= displayName %>/model"
+	"<%= displayName %>/utils"
 
 	"gorm.io/gorm/clause"
 
@@ -22,14 +22,14 @@ var admins = []model.User{
 		Username:    "sa",
 		Password:    utils.MD5V("hello123"),
 		DisplayName: "sa",
-		RoleID: 1,
+		RoleID:      1,
 	},
 	{
 		BASE_MODEL:  global.BASE_MODEL{ID: 2},
 		Username:    "admin",
 		Password:    utils.MD5V("hello123"),
 		DisplayName: "admin",
-		RoleID: 2,
+		RoleID:      2,
 	},
 }
 

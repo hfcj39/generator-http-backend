@@ -59,15 +59,6 @@ func CreateNewUser(u *model.User) error {
 	return global.DB.Create(u).Error
 }
 
-func UpdateUserOIDCToken(u, _u *model.User) error {
-	return global.DB.Model(&u).
-		Updates(map[string]interface{}{
-			"access_token":  _u.AccessToken,
-			"refresh_token": _u.RefreshToken,
-			"id_token":      _u.IdToken,
-		}).Error
-}
-
 func DeleteUser(id uint) error {
 	err := global.DB.Unscoped().Delete(&model.User{}, id).Error
 	return err
