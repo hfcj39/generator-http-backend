@@ -17,7 +17,7 @@ module.exports = {
         generator.fs.copy(generator.templatePath('.mailmap'), generator.destinationPath('.mailmap'));
         generator.fs.copy(generator.templatePath('.dockerignore'), generator.destinationPath('.dockerignore'));
         if (config.gitInit) {
-            generator.fs.copy(generator.templatePath('gitignore'), generator.destinationPath('.gitignore'));
+            generator.fs.copy(generator.templatePath('.gitignore'), generator.destinationPath('.gitignore'));
         }
     }
 
