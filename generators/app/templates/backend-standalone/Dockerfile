@@ -1,59 +1,66 @@
 # backend build
-FROM golang:1.20-alpine AS backend
+FROM golang:1.22-alpine AS backend
 LABEL maintainer="hakurei <hfcj1839@gmail.com>"
+
 WORKDIR /usr/src/app
-# ENV GOPROXY=https://goproxy.cn
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
-RUN CARGO_NET_GIT_FETCH_WITH_CLI=1 && \
-    apk --no-cache add \
+
+# 设置时区和代理
+ENV GOPROXY=https://goproxy.cn,direct \
+    GIN_MODE=release \
+    GO111MODULE=on \
+    TZ=Asia/Shanghai
+
+# 替换源以提高速度
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \
+    apk update && \
+    apk upgrade && \
+    apk add --no-cache \
         upx \
-        ca-certificates\
+        ca-certificates \
         tzdata \
         sudo \
-        python3\
+        python3 \
         py3-pip \
         openssl \
-        ca-certificates \
         sshpass \
         openssh-client \
         rsync \
-        git && \
-    apk --no-cache add --virtual build-dependencies \
+        git \
+        bash bash-doc bash-completion && \
+    apk add --no-cache --virtual build-dependencies \
         python3-dev \
         libffi-dev \
         musl-dev \
         gcc \
         cargo \
         openssl-dev \
-        # libressl-dev \
-        build-base
+        build-base && \
+    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone
 
-# RUN pip install -U pip wheel && \
-#     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
-#     pip install --upgrade cryptography cffi && \
-#     pip install --ignore-installed jmespath && \
-#     pip install --upgrade pywinrm
+# 安装Python包
+RUN pip install --upgrade pip wheel && \
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip install --upgrade cryptography cffi pywinrm
+
+# 清理安装后的残留文件
 RUN apk del build-dependencies && \
     rm -rf /var/cache/apk/* && \
     rm -rf /root/.cache/pip && \
     rm -rf /root/.cargo
 
-RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" >  /etc/timezone
+# 复制 Go 模块相关文件
+COPY go.mod go.sum ./
 
-RUN apk update && apk upgrade && apk add --no-cache bash bash-doc bash-completion \
-    && rm -rf /var/cache/apk/*
-
-COPY ./go.mod ./
-COPY ./go.sum ./
-
-ENV GO111MODULE=on \
-    GOPROXY=https://goproxy.cn,direct \
-    GIN_MODE=release
-
+# 下载 Go 依赖
 RUN go mod download
+
+# 复制项目源码
 COPY . .
-RUN go install github.com/swaggo/swag/cmd/swag
-RUN swag init
-RUN CGO_ENABLED=0 go build -ldflags "-s -w" -o server &&\
+
+# 构建 Go 应用
+RUN go install github.com/swaggo/swag/cmd/swag && \
+    swag init && \
+    CGO_ENABLED=0 go build -ldflags "-s -w" -o server && \
     upx --best server -o _upx_server && \
     mv -f _upx_server server
