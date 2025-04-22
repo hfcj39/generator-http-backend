@@ -9,9 +9,9 @@ import (
 )
 
 var Roles = []model.Role{
-	{BASE_MODEL: global.BASE_MODEL{ID: 1}, RoleName: "superAdmin", RoleValue: 777, Description: "超级管理员", Sort: 0, ButtonPermissions: []int64{}},
-	{BASE_MODEL: global.BASE_MODEL{ID: 2}, RoleName: "admin", RoleValue: 555, Description: "管理员", Sort: 0, ButtonPermissions: []int64{}},
-	{BASE_MODEL: global.BASE_MODEL{ID: 3}, RoleName: "validUser", RoleValue: 444, Description: "用户", Sort: 0, ButtonPermissions: []int64{}},
+	{BASE_MODEL: global.BASE_MODEL{ID: 1}, RoleName: "superAdmin", RoleValue: 777, Description: "超级管理员", Sort: 0},
+	{BASE_MODEL: global.BASE_MODEL{ID: 2}, RoleName: "admin", RoleValue: 555, Description: "管理员", Sort: 0},
+	{BASE_MODEL: global.BASE_MODEL{ID: 3}, RoleName: "validUser", RoleValue: 444, Description: "用户", Sort: 0},
 }
 
 type role struct{}

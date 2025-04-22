@@ -6,6 +6,7 @@ import (
 	"<%= displayName %>/service"
 	"<%= displayName %>/utils"
 	"<%= displayName %>/utils/e"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,7 @@ func VerifyJwtToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		token = strings.TrimPrefix(token, "Bearer ")
 		claims, err := utils.ParseToken(token)
 		if err != nil {
 			var code int

@@ -95,9 +95,9 @@ func UpdateUser(c *gin.Context) {
 
 	if roleValue == 444 {
 		_, _ = service.UpdateUser(user, &model.User{
-			DisplayName: Args.DisplayName,
-			HeaderImg:   Args.HeaderImg,
-			Remark:      Args.Remark,
+			RealName: Args.DisplayName,
+			Avatar:   Args.HeaderImg,
+			Remark:   Args.Remark,
 		})
 	} else {
 		// 修改不了自己的role和authority
@@ -124,8 +124,8 @@ func UpdateUser(c *gin.Context) {
 			RoleID:      Args.RoleID,
 			CustomGroup: Args.CustomGroup,
 			Remark:      Args.Remark,
-			HeaderImg:   Args.HeaderImg,
-			DisplayName: Args.DisplayName,
+			Avatar:      Args.HeaderImg,
+			RealName:    Args.DisplayName,
 		})
 		if err != nil {
 			global.LOG.Error(err.Error())
@@ -167,8 +167,8 @@ func UpdateSelfUserInfo(c *gin.Context) {
 	}
 
 	user.Remark = Args.Remark
-	user.HeaderImg = Args.HeaderImg
-	user.DisplayName = Args.DisplayName
+	user.Avatar = Args.HeaderImg
+	user.RealName = Args.DisplayName
 
 	err, user = service.UpdateSelfUserInfo(user)
 	if err != nil {
@@ -286,7 +286,7 @@ func DeleteUser(c *gin.Context) {
 // @Param username body string true "用户名"
 // @Param password body string true "密码"
 // @Success 200 {object} response.Response
-// @Router /user/login [post]
+// @Router /auth/login [post]
 func Login(c *gin.Context) {
 	L := &request.Login{}
 	if err := c.ShouldBindJSON(L); err != nil {
@@ -308,7 +308,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	response.OkWithData(gin.H{"username": U.Username, "token": jwtToken}, c)
+	response.OkWithData(gin.H{"username": U.Username, "accessToken": jwtToken}, c)
 }
 
 // SetPassword
@@ -366,9 +366,9 @@ func Register(c *gin.Context) {
 	}
 
 	newUser := &model.User{
-		Username:    L.Username,
-		Password:    utils.MD5V(L.Password),
-		DisplayName: L.Username,
+		Username: L.Username,
+		Password: utils.MD5V(L.Password),
+		RealName: L.Username,
 
 		RoleID: 3, // 444 valid user
 	}

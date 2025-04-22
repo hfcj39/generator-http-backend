@@ -6,6 +6,8 @@
 
    `$ swag init` 或者 `$ make doc`
 
+   访问文档 http://localhost:8888/swagger/index.html
+
 ## 开发项目
 
 推荐 air 启动 `air -c .air.toml`

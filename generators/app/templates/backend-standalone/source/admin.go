@@ -18,18 +18,18 @@ type admin struct{}
 
 var admins = []model.User{
 	{
-		BASE_MODEL:  global.BASE_MODEL{ID: 1},
-		Username:    "sa",
-		Password:    utils.MD5V("hello123"),
-		DisplayName: "sa",
-		RoleID:      1,
+		BASE_MODEL: global.BASE_MODEL{ID: 1},
+		Username:   "sa",
+		Password:   utils.MD5V("hello123"),
+		RealName:   "sa",
+		RoleID:     1,
 	},
 	{
-		BASE_MODEL:  global.BASE_MODEL{ID: 2},
-		Username:    "admin",
-		Password:    utils.MD5V("hello123"),
-		DisplayName: "admin",
-		RoleID:      2,
+		BASE_MODEL: global.BASE_MODEL{ID: 2},
+		Username:   "admin",
+		Password:   utils.MD5V("hello123"),
+		RealName:   "admin",
+		RoleID:     2,
 	},
 }
 

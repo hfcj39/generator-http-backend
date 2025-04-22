@@ -9,7 +9,7 @@ import (
 func InitUserRouter(Router *gin.RouterGroup) {
 	UserRouter := Router.Group("user")
 	{
-		UserRouter.GET("/userInfo", v1.GetUserInfo)
+		UserRouter.GET("/info", v1.GetUserInfo)
 		UserRouter.DELETE("/:id", v1.DeleteUser)
 		UserRouter.GET("/list", v1.GetUserList)
 		UserRouter.POST("/update", v1.UpdateUser)

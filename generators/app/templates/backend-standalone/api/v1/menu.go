@@ -10,8 +10,6 @@ import (
 	"<%= displayName %>/utils/e"
 	"strings"
 
-	"gorm.io/gorm"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -227,101 +225,101 @@ func UpdateRoleMenu(c *gin.Context) {
 
 // func DeleteRoleMenu(c *gin.Context) {}
 
-func AddButton(c *gin.Context) {
-	Args := &request.AddButton{}
-	if err := c.ShouldBindJSON(Args); err != nil {
-		response.FailWithDetailed(e.InvalidParams, err.Error(), e.GetMsg(e.InvalidParams), c)
-		return
-	}
+// func AddButton(c *gin.Context) {
+// 	Args := &request.AddButton{}
+// 	if err := c.ShouldBindJSON(Args); err != nil {
+// 		response.FailWithDetailed(e.InvalidParams, err.Error(), e.GetMsg(e.InvalidParams), c)
+// 		return
+// 	}
 
-	err, _ := service.GetMenuByName(Args.SysBaseMenuName)
-	if err != nil {
-		global.LOG.Error(err.Error())
-		if err == gorm.ErrRecordNotFound {
-			response.FailWithMessage("找不到所传菜单名称对应的记录", c)
-			return
-		}
-		response.FailWithMessage("查询关联菜单失败", c)
-		return
-	}
+// 	err, _ := service.GetMenuByName(Args.SysBaseMenuName)
+// 	if err != nil {
+// 		global.LOG.Error(err.Error())
+// 		if err == gorm.ErrRecordNotFound {
+// 			response.FailWithMessage("找不到所传菜单名称对应的记录", c)
+// 			return
+// 		}
+// 		response.FailWithMessage("查询关联菜单失败", c)
+// 		return
+// 	}
 
-	if err = service.AddButton(&model.Button{
-		SysBaseMenuName: Args.SysBaseMenuName,
-		Description:     Args.Description,
-		AuthFlag:        Args.AuthFlag,
-		IsActive:        Args.IsActive,
-		OrderNo:         *Args.OrderNo,
-		IsSameAuthority: Args.IsSameAuthority,
-		Type:            Args.Type,
-		RoleValue:       Args.RoleValue,
-	}); err != nil {
-		response.FailWithMessage("创建按钮权限失败", c)
-		return
-	}
+// 	if err = service.AddButton(&model.Button{
+// 		SysBaseMenuName: Args.SysBaseMenuName,
+// 		Description:     Args.Description,
+// 		AuthFlag:        Args.AuthFlag,
+// 		IsActive:        Args.IsActive,
+// 		OrderNo:         *Args.OrderNo,
+// 		IsSameAuthority: Args.IsSameAuthority,
+// 		Type:            Args.Type,
+// 		RoleValue:       Args.RoleValue,
+// 	}); err != nil {
+// 		response.FailWithMessage("创建按钮权限失败", c)
+// 		return
+// 	}
 
-	response.OkWithMessage("添加成功", c)
-}
+// 	response.OkWithMessage("添加成功", c)
+// }
 
-func GetButtonByUser(c *gin.Context) {
-	claims := c.MustGet("claims").(middleware.RoleClaims)
-	_, userInfo := service.FindByUserID(claims.UserId)
-	err, b := service.GetButtonByRole(userInfo.Role.ID, userInfo.Role.RoleValue)
-	if err != nil {
-		global.LOG.Error(err.Error())
-		response.FailWithMessage("获取用户按钮权限失败", c)
-		return
-	}
-	response.OkWithData(b, c)
-}
+// func GetButtonByUser(c *gin.Context) {
+// 	claims := c.MustGet("claims").(middleware.RoleClaims)
+// 	_, userInfo := service.FindByUserID(claims.UserId)
+// 	err, b := service.GetButtonByRole(userInfo.Role.ID, userInfo.Role.RoleValue)
+// 	if err != nil {
+// 		global.LOG.Error(err.Error())
+// 		response.FailWithMessage("获取用户按钮权限失败", c)
+// 		return
+// 	}
+// 	response.OkWithData(b, c)
+// }
 
-func UpdateButton(c *gin.Context) {
-	Args := &request.UpdateButton{}
-	if err := c.ShouldBindJSON(Args); err != nil {
-		global.LOG.Error(err.Error())
-		response.FailWithDetailed(e.InvalidParams, err.Error(), e.GetMsg(e.InvalidParams), c)
-		return
-	}
-	err, b := service.FindButtonByID(Args.ID)
-	if err == gorm.ErrRecordNotFound {
-		global.LOG.Error(err.Error())
-		response.FailWithMessage("没有找到ID对应的按钮", c)
-		return
-	}
-	if err != nil {
-		global.LOG.Error(err.Error())
-		response.FailWithMessage("查询按钮出错", c)
-		return
-	}
+// func UpdateButton(c *gin.Context) {
+// 	Args := &request.UpdateButton{}
+// 	if err := c.ShouldBindJSON(Args); err != nil {
+// 		global.LOG.Error(err.Error())
+// 		response.FailWithDetailed(e.InvalidParams, err.Error(), e.GetMsg(e.InvalidParams), c)
+// 		return
+// 	}
+// 	err, b := service.FindButtonByID(Args.ID)
+// 	if err == gorm.ErrRecordNotFound {
+// 		global.LOG.Error(err.Error())
+// 		response.FailWithMessage("没有找到ID对应的按钮", c)
+// 		return
+// 	}
+// 	if err != nil {
+// 		global.LOG.Error(err.Error())
+// 		response.FailWithMessage("查询按钮出错", c)
+// 		return
+// 	}
 
-	b.SysBaseMenuName = Args.SysBaseMenuName
-	b.AuthFlag = Args.AuthFlag
-	b.IsActive = Args.IsActive
-	b.OrderNo = *Args.OrderNo
-	b.Type = Args.Type
-	b.IsSameAuthority = Args.IsSameAuthority
-	b.Description = *Args.Description
+// 	b.SysBaseMenuName = Args.SysBaseMenuName
+// 	b.AuthFlag = Args.AuthFlag
+// 	b.IsActive = Args.IsActive
+// 	b.OrderNo = *Args.OrderNo
+// 	b.Type = Args.Type
+// 	b.IsSameAuthority = Args.IsSameAuthority
+// 	b.Description = *Args.Description
 
-	err = service.UpdateButton(b)
-	if err != nil {
-		global.LOG.Error(err.Error())
-		response.FailWithMessage("更新按钮出错", c)
-		return
-	}
-	response.OkDetailed(b, "修改按钮成功", c)
-}
+// 	err = service.UpdateButton(b)
+// 	if err != nil {
+// 		global.LOG.Error(err.Error())
+// 		response.FailWithMessage("更新按钮出错", c)
+// 		return
+// 	}
+// 	response.OkDetailed(b, "修改按钮成功", c)
+// }
 
-func DeleteButton(c *gin.Context) {
-	Args := &request.UriIdStruct{}
-	if err := c.ShouldBindUri(Args); err != nil {
-		global.LOG.Error(err.Error())
-		response.FailWithDetailed(e.InvalidParams, err.Error(), e.GetMsg(e.InvalidParams), c)
-		return
-	}
-	err := service.DeleteButton(Args.ID)
-	if err != nil {
-		global.LOG.Error(err.Error())
-		response.FailWithMessage("删除按钮失败", c)
-		return
-	}
-	response.OkWithMessage("删除按钮成功", c)
-}
+// func DeleteButton(c *gin.Context) {
+// 	Args := &request.UriIdStruct{}
+// 	if err := c.ShouldBindUri(Args); err != nil {
+// 		global.LOG.Error(err.Error())
+// 		response.FailWithDetailed(e.InvalidParams, err.Error(), e.GetMsg(e.InvalidParams), c)
+// 		return
+// 	}
+// 	err := service.DeleteButton(Args.ID)
+// 	if err != nil {
+// 		global.LOG.Error(err.Error())
+// 		response.FailWithMessage("删除按钮失败", c)
+// 		return
+// 	}
+// 	response.OkWithMessage("删除按钮成功", c)
+// }

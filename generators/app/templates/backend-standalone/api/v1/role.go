@@ -8,7 +8,6 @@ import (
 	"<%= displayName %>/model/response"
 	"<%= displayName %>/service"
 	"<%= displayName %>/utils/e"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,10 +39,10 @@ func CreateRole(c *gin.Context) {
 	}
 
 	role := &model.Role{
-		RoleName:          Args.RoleName,
-		Description:       Args.Description,
-		RoleValue:         Args.RoleValue,
-		ButtonPermissions: Args.ButtonPermissions,
+		RoleName:    Args.RoleName,
+		Description: Args.Description,
+		RoleValue:   Args.RoleValue,
+		// ButtonPermissions: Args.ButtonPermissions, //todo
 	}
 
 	err, rst := service.AddRole(role)
@@ -156,7 +155,7 @@ func UpdateRole(c *gin.Context) {
 	r.RoleName = Args.RoleName
 	r.RoleValue = Args.RoleValue
 	r.Description = Args.Description
-	r.ButtonPermissions = Args.ButtonPermissions
+	// r.ButtonPermissions = Args.ButtonPermissions // todo：改
 
 	err = service.UpdateRole(r)
 	if err != nil {
@@ -192,7 +191,7 @@ func DeleteRole(c *gin.Context) {
 
 	err, _, count := service.GetUserListByRole(Args.ID, 1, 1)
 	if err != nil {
-		fmt.Println(err.Error())
+		global.LOG.Error(err.Error())
 		response.FailWithMessage("查询角色关联用户失败", c)
 		return
 	}
@@ -203,7 +202,7 @@ func DeleteRole(c *gin.Context) {
 	}
 
 	if err, menus := service.GetMenuByRole(Args.ID); err != nil {
-		fmt.Println(err.Error())
+		global.LOG.Error(err.Error())
 		response.FailWithMessage("查询角色关联菜单失败", c)
 		return
 	} else if len(menus) > 0 {

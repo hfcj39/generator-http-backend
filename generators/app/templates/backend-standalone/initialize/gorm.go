@@ -37,7 +37,6 @@ func PostgresTables(db *gorm.DB) {
 		model.SysBaseMenu{},
 		model.SysBaseMenuParameter{},
 		model.ServerConfig{},
-		model.Button{},
 	)
 	if err != nil {
 		global.LOG.Error("register table failed", zap.Any("err", err))
@@ -49,9 +48,8 @@ func PostgresTables(db *gorm.DB) {
 		source.Role,
 		source.Admin,
 		source.BaseMenu,
-		source.RolesMenus,
-		source.Config,
-		source.Button,
+		// source.RolesMenus,
+		// source.Config,
 	)
 	if err != nil {
 		global.LOG.Error("init data failed", zap.Any("err", err))

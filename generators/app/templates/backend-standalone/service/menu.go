@@ -3,11 +3,7 @@ package service
 import (
 	"<%= displayName %>/global"
 	"<%= displayName %>/model"
-	"<%= displayName %>/utils"
 	"fmt"
-	"strings"
-
-	casbinAdapter "github.com/casbin/gorm-adapter/v3"
 )
 
 func GetMenuList() (error, []model.SysBaseMenu) {
@@ -106,72 +102,72 @@ func AddRoleMenu(menus []uint, roleId int) error {
 	return err
 }
 
-func AddButton(button *model.Button) error {
-	return global.DB.Create(button).Error
-}
+// func AddButton(button *model.Button) error {
+// 	return global.DB.Create(button).Error
+// }
 
-type ButtonAuthFlag struct {
-	AuthFlag        string
-	IsSameAuthority *bool
-}
+// type ButtonAuthFlag struct {
+// 	AuthFlag        string
+// 	IsSameAuthority *bool
+// }
 
-func GetButtonByRole(roleId uint, roleValue int) (error, *[]model.Button) {
-	r := new(model.Role)
-	var casbinButton []string
-	// role_value->所拥有的接口权限
-	var casbinRule []casbinAdapter.CasbinRule
-	global.DB.Where("v0::int <= ?", roleValue).Find(&casbinRule)
-	for _, rule := range casbinRule {
-		if rule.V3 != "-" {
-			casbinButton = append(casbinButton, strings.Split(rule.V3, "|")...)
-		}
-	}
+// func GetButtonByRole(roleId uint, roleValue int) (error, *[]model.Button) {
+// 	r := new(model.Role)
+// 	var casbinButton []string
+// 	// role_value->所拥有的接口权限
+// 	var casbinRule []casbinAdapter.CasbinRule
+// 	global.DB.Where("v0::int <= ?", roleValue).Find(&casbinRule)
+// 	for _, rule := range casbinRule {
+// 		if rule.V3 != "-" {
+// 			casbinButton = append(casbinButton, strings.Split(rule.V3, "|")...)
+// 		}
+// 	}
 
-	var buttonList = make([]model.Button, 0)
-	// role_id->role拥有的菜单->菜单下的按钮
-	err := global.DB.
-		Where(roleId).
-		Preload("SysBaseMenus.Buttons",
-			"buttons.is_active = ? and (buttons.type in ? or buttons.auth_flag in ?)", true, []string{"menu", "token"}, casbinButton).
-		First(&r).
-		Error
+// 	var buttonList = make([]model.Button, 0)
+// 	// role_id->role拥有的菜单->菜单下的按钮
+// 	err := global.DB.
+// 		Where(roleId).
+// 		Preload("SysBaseMenus.Buttons",
+// 			"buttons.is_active = ? and (buttons.type in ? or buttons.auth_flag in ?)", true, []string{"menu", "token"}, casbinButton).
+// 		First(&r).
+// 		Error
 
-	// 过滤掉没有to_menu权限的button
-	var menuNameList = make([]string, 0)
-	for _, _m := range r.SysBaseMenus {
-		menuNameList = append(menuNameList, _m.Name)
-	}
-	for _, m := range r.SysBaseMenus {
-		for _, b := range m.Buttons {
-			// 按钮类型为跳转菜单,但是没有to_menu的权限,在这里剔除
-			if b.Type == "menu" && !utils.ItemInStructArray(b.ToMenuName, menuNameList) {
-				continue
-			}
-			if b.Type == "token" && b.RoleValue > roleValue {
-				continue
-			}
-			buttonList = append(buttonList, b)
-		}
-	}
+// 	// 过滤掉没有to_menu权限的button
+// 	var menuNameList = make([]string, 0)
+// 	for _, _m := range r.SysBaseMenus {
+// 		menuNameList = append(menuNameList, _m.Name)
+// 	}
+// 	for _, m := range r.SysBaseMenus {
+// 		for _, b := range m.Buttons {
+// 			// 按钮类型为跳转菜单,但是没有to_menu的权限,在这里剔除
+// 			if b.Type == "menu" && !utils.ItemInStructArray(b.ToMenuName, menuNameList) {
+// 				continue
+// 			}
+// 			if b.Type == "token" && b.RoleValue > roleValue {
+// 				continue
+// 			}
+// 			buttonList = append(buttonList, b)
+// 		}
+// 	}
 
-	return err, &buttonList
-}
+// 	return err, &buttonList
+// }
 
-func DeleteButton(id uint) error {
-	err := global.DB.Delete(&model.Button{}, id).Error
-	return err
-}
+// func DeleteButton(id uint) error {
+// 	err := global.DB.Delete(&model.Button{}, id).Error
+// 	return err
+// }
 
-func UpdateButton(b *model.Button) error {
-	err := global.DB.Select("*").Updates(b).Error
-	return err
-}
+// func UpdateButton(b *model.Button) error {
+// 	err := global.DB.Select("*").Updates(b).Error
+// 	return err
+// }
 
-func FindButtonByID(id uint) (error, *model.Button) {
-	rst := model.Button{}
-	err := global.DB.First(&rst, id).Error
-	return err, &rst
-}
+// func FindButtonByID(id uint) (error, *model.Button) {
+// 	rst := model.Button{}
+// 	err := global.DB.First(&rst, id).Error
+// 	return err, &rst
+// }
 
 func GetMenuByName(name string) (error, model.SysBaseMenu) {
 	var menu model.SysBaseMenu

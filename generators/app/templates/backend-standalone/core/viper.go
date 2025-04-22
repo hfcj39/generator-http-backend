@@ -5,9 +5,10 @@ import (
 	"<%= displayName %>/utils"
 	"flag"
 	"fmt"
+	"os"
+
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"os"
 )
 
 func Viper(path ...string) *viper.Viper {
@@ -42,12 +43,12 @@ func Viper(path ...string) *viper.Viper {
 	v.OnConfigChange(func(e fsnotify.Event) {
 		fmt.Println("config file changed:", e.Name)
 		if err := v.Unmarshal(&global.CONFIG); err != nil {
-			fmt.Println(err)
+			global.LOG.Error(err.Error())
 		}
 	})
 
 	if err := v.Unmarshal(&global.CONFIG); err != nil {
-		fmt.Println(err)
+		global.LOG.Error(err.Error())
 	}
 	return v
 }

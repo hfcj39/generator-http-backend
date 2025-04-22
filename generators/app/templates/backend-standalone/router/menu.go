@@ -9,17 +9,13 @@ import (
 func InitMenuRouter(Router *gin.RouterGroup) {
 	MenuRouter := Router.Group("menu")
 	{
-		MenuRouter.POST("/getMenuByUser", v1.GetMenu)
-		MenuRouter.GET("/getMenuList", v1.GetMenuList)
+		MenuRouter.POST("/list", v1.GetMenuList) // 管理页面用，获取全部的路由
+		MenuRouter.GET("/all", v1.GetMenu)       // 根据用户token获取对应的页面路由
 		MenuRouter.POST("/addMenu", v1.AddMenu)
 		MenuRouter.DELETE("/deleteMenu", v1.DeleteMenu)
 		MenuRouter.POST("/updateMenu", v1.UpdateMenu)
 		MenuRouter.GET("/getMenuById", v1.GetMenuById)
 		MenuRouter.GET("/getMenuByRole", v1.GetRoleMenu)
 		MenuRouter.POST("/addRoleMenu", v1.UpdateRoleMenu)
-		MenuRouter.POST("/addButton", v1.AddButton)
-		MenuRouter.GET("/getButtonByUser", v1.GetButtonByUser)
-		MenuRouter.POST("/updateButton", v1.UpdateButton)
-		MenuRouter.POST("/deleteButton", v1.DeleteButton)
 	}
 }

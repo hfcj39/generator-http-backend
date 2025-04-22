@@ -12,7 +12,7 @@ func InitBaseRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
 		BaseRouter.GET("/ping", func(c *gin.Context) {
 			c.String(200, "pong")
 		})
-		BaseRouter.POST("/user/login", v1.Login)
+		BaseRouter.POST("/auth/login", v1.Login)
 		BaseRouter.POST("/user/register", v1.Register)
 		BaseRouter.GET("/version", v1.GetSystemVersion)
 	}

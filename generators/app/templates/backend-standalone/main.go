@@ -4,6 +4,8 @@ import (
 	"<%= displayName %>/core"
 	"<%= displayName %>/global"
 	"<%= displayName %>/initialize"
+
+	"go.uber.org/zap"
 )
 
 // @title <%= displayName %>
@@ -12,9 +14,10 @@ import (
 // @contact.name hfcj
 // @BasePath /
 func main() {
-	global.VP = core.Viper()      // 初始化Viper
-	core.Env()                    // 通过环境变量配置参数
-	global.LOG = core.Zap()       // 初始化zap日志库
+	global.VP = core.Viper() // 初始化Viper
+	core.Env()               // 通过环境变量配置参数
+	global.LOG = core.Zap()  // 初始化zap日志库
+	zap.ReplaceGlobals(global.LOG)
 	global.DB = initialize.Gorm() // gorm连接数据库
 	if global.DB != nil {
 		initialize.PostgresTables(global.DB) // 初始化表
